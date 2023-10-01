@@ -1,4 +1,4 @@
-package net.wavem.rclkotlin.message.domain.builtin_interfaces
+package net.wavem.rclkotlin.domain.builtin_interfaces
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -12,9 +12,14 @@ data class Time(
         fun read(data : ByteArray) : Time {
             val buf : ByteBuffer = ByteBuffer.wrap(data)
             buf.order(ByteOrder.LITTLE_ENDIAN)
+
             val sec : Int = buf.getInt()
             val nanosec : Int = buf.getInt()
-            return Time(sec, nanosec)
+
+            return Time(
+                sec = sec,
+                nanosec = nanosec
+            )
         }
     }
 }

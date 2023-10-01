@@ -1,6 +1,6 @@
-package net.wavem.rclkotlin.message.domain.sensor_msgs
+package net.wavem.rclkotlin.domain.sensor_msgs
 
-import net.wavem.rclkotlin.message.domain.std_msgs.Header
+import net.wavem.rclkotlin.domain.std_msgs.Header
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -18,12 +18,12 @@ data class LaserScan(
     val intensities:  FloatArray
 ) {
     companion object {
-        fun read(data: ByteArray): LaserScan {
-            val buf: ByteBuffer = ByteBuffer.wrap(data)
+        fun read(data : ByteArray) : LaserScan {
+            val buf : ByteBuffer = ByteBuffer.wrap(data)
             buf.order(ByteOrder.LITTLE_ENDIAN)
 
             val header : Header = Header.read(data)
-            val headerSize = 14 + header.frame_id.length
+            val headerSize : Int = 14 + header.frame_id.length
             buf.position(headerSize)
 
             val angle_min : Float = buf.getFloat()
@@ -49,17 +49,36 @@ data class LaserScan(
             }
 
             return LaserScan(
-                header,
-                angle_min,
-                angle_max,
-                angle_increment,
-                time_increment,
-                scan_time,
-                range_min,
-                range_max,
-                ranges,
-                intensities
+                header = header,
+                angle_min = angle_min,
+                angle_max = angle_max,
+                angle_increment = angle_increment,
+                time_increment = time_increment,
+                scan_time = scan_time,
+                range_min = range_min,
+                range_max = range_max,
+                ranges = ranges,
+                intensities = intensities
             )
         }
+    }
+
+    override fun equals(other : Any?) : Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LaserScan
+
+        if (!ranges.contentEquals(other.ranges)) return false
+        if (!intensities.contentEquals(other.intensities)) return false
+
+        return true
+    }
+
+    override fun hashCode() : Int {
+        var result : Int = ranges.contentHashCode()
+        result = 31 * result + intensities.contentHashCode()
+
+        return result
     }
 }

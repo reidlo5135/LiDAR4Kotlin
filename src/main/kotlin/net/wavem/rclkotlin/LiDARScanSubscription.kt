@@ -1,11 +1,11 @@
 package net.wavem.rclkotlin
 
-import java.util.concurrent.Flow.Subscriber;
-import java.util.concurrent.Flow.Subscription;
-import pinorobotics.rtpstalk.RtpsTalkClient;
-import pinorobotics.rtpstalk.RtpsTalkConfiguration;
+import java.util.concurrent.Flow.Subscriber
+import java.util.concurrent.Flow.Subscription
+import pinorobotics.rtpstalk.RtpsTalkClient
+import pinorobotics.rtpstalk.RtpsTalkConfiguration
 import id.jros2client.impl.rmw.RmwConstants
-import net.wavem.rclkotlin.message.domain.sensor_msgs.LaserScan
+import net.wavem.rclkotlin.domain.sensor_msgs.LaserScan
 import pinorobotics.rtpstalk.messages.RtpsTalkDataMessage
 import rx.Observable
 import rx.subjects.PublishSubject
@@ -17,7 +17,8 @@ class LiDARScanSubscription {
             .build()
     )
 
-    private val dataObservable: PublishSubject<LaserScan?> = PublishSubject.create()
+    private val dataObservable : PublishSubject<LaserScan?> = PublishSubject.create()
+
     fun getDataObservable() : Observable<LaserScan?> {
         return dataObservable
     }
@@ -60,7 +61,7 @@ fun main(args : Array<String>) {
     val liDARScanSubscription : LiDARScanSubscription = LiDARScanSubscription()
     liDARScanSubscription.create()
 
-    liDARScanSubscription.getDataObservable().subscribe() {newValue ->
+    liDARScanSubscription.getDataObservable().subscribe() { newValue ->
         if (newValue != null) {
             println("LiDAR Scan Data updated : $newValue")
         }
