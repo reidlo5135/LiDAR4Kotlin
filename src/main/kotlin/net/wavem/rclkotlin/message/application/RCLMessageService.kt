@@ -1,4 +1,4 @@
-package net.wavem.rclkotlin
+package net.wavem.rclkotlin.message.application
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

@@ -1,6 +1,6 @@
-package net.wavem.rclkotlin.sensor_msgs
+package net.wavem.rclkotlin.message.domain.sensor_msgs
 
-import net.wavem.rclkotlin.std_msgs.Header
+import net.wavem.rclkotlin.message.domain.std_msgs.Header
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -23,8 +23,7 @@ data class LaserScan(
             buf.order(ByteOrder.LITTLE_ENDIAN)
 
             val header : Header = Header.read(data)
-
-            val headerSize = 12 + header.frame_id.length
+            val headerSize = 14 + header.frame_id.length
             buf.position(headerSize)
 
             val angle_min : Float = buf.getFloat()
