@@ -1,9 +1,8 @@
-package net.wavem.rclkotlin.message.domain.std_msgs
+package net.wavem.rclkotlin.domain.std_msgs
 
-import net.wavem.rclkotlin.message.domain.builtin_interfaces.Time
+import net.wavem.rclkotlin.domain.builtin_interfaces.Time
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-
 
 @JvmRecord
 data class Header(
@@ -23,7 +22,11 @@ data class Header(
             var frame_id = ""
 
             while (len-- > 0) frame_id += Char(buf.get().toUShort())
-            return Header(time, frame_id)
+
+            return Header(
+                stamp = time,
+                frame_id = frame_id
+            )
         }
     }
 }
