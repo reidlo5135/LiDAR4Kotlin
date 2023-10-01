@@ -1,4 +1,4 @@
-package net.wavem.rclkotlin.std_msgs
+package net.wavem.rclkotlin.message.domain.builtin_interfaces
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

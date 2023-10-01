@@ -4,20 +4,16 @@ import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
 import pinorobotics.rtpstalk.RtpsTalkClient;
 import pinorobotics.rtpstalk.RtpsTalkConfiguration;
-import id.jros2client.impl.rmw.DdsNameMapper;
 import id.jros2client.impl.rmw.RmwConstants
-import id.jrosclient.utils.RosNameUtils
-import net.wavem.rclkotlin.sensor_msgs.LaserScan
+import net.wavem.rclkotlin.message.domain.sensor_msgs.LaserScan
 import pinorobotics.rtpstalk.messages.RtpsTalkDataMessage
 import rx.Observable
 import rx.subjects.PublishSubject
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 class LiDARScanSubscription {
     private val ddsClient : RtpsTalkClient = RtpsTalkClient(
         RtpsTalkConfiguration.Builder()
-            .networkInterface("lo")
+            .networkInterface(DDS_NETWORK_INTF_TYPE)
             .build()
     )
 
@@ -27,18 +23,17 @@ class LiDARScanSubscription {
     }
 
     fun create() {
-        ddsClient.subscribe("rt/scan", "sensor_msgs::msg::dds_::LaserScan_", RmwConstants.DEFAULT_SUBSCRIBER_QOS, object : Subscriber<RtpsTalkDataMessage> {
+        ddsClient.subscribe(DDS_TOPIC, DDS_MESSAGE_TYPE, RmwConstants.DEFAULT_SUBSCRIBER_QOS, object : Subscriber<RtpsTalkDataMessage> {
             private lateinit var subscription : Subscription
 
             override fun onSubscribe(subscription : Subscription) {
                 this.subscription = subscription
-                println("Subscription registerd")
+                println("Subscription registered")
                 subscription.request(1)
             }
 
             override fun onNext(message : RtpsTalkDataMessage) {
-                message.data().ifPresent {
-                    data -> println("Received " + LaserScan.read(data))
+                message.data().ifPresent { data ->
                     dataObservable.onNext(LaserScan.read(data))
                 }
                 subscription.request(1)
@@ -52,6 +47,12 @@ class LiDARScanSubscription {
                 subscription.cancel()
             }
         })
+    }
+
+    companion object {
+        const val DDS_NETWORK_INTF_TYPE : String = "lo"
+        const val DDS_TOPIC : String = "rt/scan"
+        const val DDS_MESSAGE_TYPE : String = "sensor_msgs::msg::dds_::LaserScan_"
     }
 }
 
